@@ -11,4 +11,5 @@ public class AudioFile : ScriptableObject
     public float AudioVolume = 50f;
     public bool Loop = false;
     public int LoopAmount = 1;
+    public bool PlayOnStart = false;
 }
