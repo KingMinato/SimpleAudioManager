@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private AudioManager audioManager;
+    private SimpleAudioManager audioManager;
 
     private void Awake()
     {
         if (audioManager == null)
-            audioManager = GetComponent<AudioManager>();
+            audioManager = GetComponent<SimpleAudioManager>();
     }
 
     private void Update()
