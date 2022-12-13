@@ -26,6 +26,7 @@ public class SimpleAudioManagerWindow : EditorWindow
 
     private void OnGUI()
     {
+        Color oldColor = GUI.color;
         activeTabIndex = GUILayout.SelectionGrid(activeTabIndex, tabNames, 2);
 
         switch (activeTabIndex)
@@ -37,15 +38,29 @@ public class SimpleAudioManagerWindow : EditorWindow
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.MaxWidth(300));
                 GUILayout.BeginVertical(GUILayout.MinWidth(100), GUILayout.MaxWidth(300)); // left objects
                 GameObject[] gameObjectsInScene = GetAllGameObjectsInScene();
-                //Debug.Log(gameObjectsInScene.Length);
                 for (int i = gameObjectsInScene.Length - 1; i >= 0; i--)
                 {
                     if (gameObjectsInScene[i].GetComponent<SimpleAudioManager>() != null)
                     {
-                        if (GUILayout.Button(gameObjectsInScene[i].name))
+                        if (_objectIndex == i)
                         {
-                            _objectIndex = i;
-                            Selection.activeGameObject = gameObjectsInScene[i];
+                            GUI.color = Color.green;
+                            if (GUILayout.Button(gameObjectsInScene[i].name))
+                            {
+                                open = null;
+                                _objectIndex = i;
+                                Selection.activeGameObject = gameObjectsInScene[i];
+                            }
+                            GUI.color = oldColor;
+                        }
+                        else
+                        {
+                            if (GUILayout.Button(gameObjectsInScene[i].name))
+                            {
+                                open = null;
+                                _objectIndex = i;
+                                Selection.activeGameObject = gameObjectsInScene[i];
+                            }
                         }
                     }
                 }
@@ -82,17 +97,17 @@ public class SimpleAudioManagerWindow : EditorWindow
 
     private void ShowSOInfo(string objectName, List<AudioFile> audioFiles)
     {
-        Event evt = Event.current;
-        Vector2 mousePos = evt.mousePosition;
         var oldColor = GUI.color;
 
-        if (open.Length <= 0)
+        if (open == null)
         {
             open = new bool[audioFiles.Count];
         }
 
         for (int i = 0; i < audioFiles.Count; i++)
         {
+            Debug.Log(i);
+            Debug.Log(open.Length);
             GUI.color = Color.red;
             open[i] = EditorGUILayout.Foldout(open[i], audioFiles[i].name, true);
             GUI.color = oldColor;
