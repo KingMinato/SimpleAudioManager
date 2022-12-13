@@ -78,7 +78,15 @@ public class SimpleAudioManager : MonoBehaviour
             {
                 if (Files[i].Loop)
                 {
-                    StartCoroutine(PlayWithLoop(fileName));
+                    if (Files[i].InfiniteLoop)
+                    {
+                        Files[i].AudioSource.loop = true;
+                        Files[i].AudioSource.Play();
+                    }
+                    else
+                    {
+                        StartCoroutine(PlayWithLoop(Files[i].Name));
+                    }
                 }
                 else
                 {
