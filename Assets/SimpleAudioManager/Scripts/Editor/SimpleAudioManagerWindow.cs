@@ -342,9 +342,9 @@ public class SimpleAudioManagerWindow : EditorWindow
     {
         GUILayout.BeginHorizontal();
         Color oldColor = GUI.color;
-        scrollPosition2 = GUILayout.BeginScrollView(scrollPosition, GUILayout.MaxWidth(300));
+        scrollPosition2 = GUILayout.BeginScrollView(scrollPosition2, GUILayout.MaxWidth(300));
         GUILayout.BeginVertical(GUILayout.MinWidth(100), GUILayout.MaxWidth(300));
-        for (int i = audioFiles.Length - 1; i >= 0; i--)
+        for (int i = 0; i < audioFiles.Length; i++)
         {
             if (_objectIndex2 == i)
             {
