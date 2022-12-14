@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,14 +8,17 @@ public class SimpleAudioManagerWindow : EditorWindow
     private string[] tabNames = new string[2] { "Objects in Scene", "Audio Files" };
     private int activeTabIndex;
     private int _objectIndex;
+    private int _objectIndex2;
     private Vector2 scrollPosition;
+    private Vector2 scrollPosition2;
     private List<bool> open;
     private bool allObjects = false;
     private AudioFile newAudioFile;
     private GUIStyle style;
 
-    private string scriptableObjectsLocation;
+    private string relativePath;
     private string path;
+    private AudioFile[] scriptableObjectsInFolder;
 
     [MenuItem("Tools/SimpleAudioManager")]
     static void OpenSimpleAudioManager()
@@ -49,6 +53,10 @@ public class SimpleAudioManagerWindow : EditorWindow
                 break;
             case 1:
                 ShowLocationInput();
+                if (path != null)
+                {
+                    ShowScriptableObjectsInFolder(GetSOFromDir(path));
+                }
                 break;
             default:
                 break;
@@ -177,8 +185,6 @@ public class SimpleAudioManagerWindow : EditorWindow
 
         for (int i = 0; i < audioFiles.Count; i++)
         {
-            Debug.Log(i);
-            Debug.Log(open.Count);
             GUI.color = Color.green;
             open[i] = EditorGUILayout.Foldout(open[i], audioFiles[i].name, true);
             GUI.color = oldColor;
@@ -270,14 +276,105 @@ public class SimpleAudioManagerWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Select Path"))
         {
-            path = EditorUtility.SaveFolderPanel("Select Path", "Assets/", "");
+            //path = "Assets/SimpleAudioManager/Preset Audio Files/AudioFiles";
+            relativePath = EditorUtility.SaveFolderPanel("Select Path", "Assets/", "");
+            path = relativePath.Substring(relativePath.IndexOf("Assets/"));
         }
+        GUILayout.Label(path);
         EditorGUILayout.EndHorizontal();
     }
 
-    private void ShowScriptableObjects(string path)
+    private void ShowScriptableObjects(AudioFile audioFile)
     {
+        //AudioFile audioFile = AssetDatabase.LoadAssetAtPath<AudioFile>(file);
 
+        EditorGUILayout.BeginVertical();
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Name", EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal(GUILayout.MinWidth(200));
+        audioFile.Name = EditorGUILayout.TextField(audioFile.Name);
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("AudioClip", EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal(GUILayout.MinWidth(200));
+        GUILayout.FlexibleSpace();
+        audioFile.AudioClip = (AudioClip)EditorGUILayout.ObjectField(audioFile.AudioClip, typeof(AudioClip), false, GUILayout.Width(200), GUILayout.Height(50));
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Audio Volume", EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal(GUILayout.MinWidth(200));
+        audioFile.AudioVolume = EditorGUILayout.Slider(audioFile.AudioVolume, 0f, 100f);
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Loop", EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal(GUILayout.MinWidth(200));
+        audioFile.Loop = EditorGUILayout.Toggle(audioFile.Loop);
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Loop Amount", EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal(GUILayout.MinWidth(200));
+        audioFile.LoopAmount = EditorGUILayout.IntField(audioFile.LoopAmount);
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndVertical();
+    }
+
+    private AudioFile[] GetSOFromDir(string path)
+    {
+        string[] fileDirs = Directory.GetFiles(path, "*.asset", SearchOption.TopDirectoryOnly);
+        AudioFile[] audioFiles = new AudioFile[fileDirs.Length];
+        for (int i = 0; i < audioFiles.Length; i++)
+        {
+            audioFiles[i] = AssetDatabase.LoadAssetAtPath<AudioFile>(fileDirs[i]);
+        }
+        return audioFiles;
+    }
+
+    private void ShowScriptableObjectsInFolder(AudioFile[] audioFiles)
+    {
+        GUILayout.BeginHorizontal();
+        Color oldColor = GUI.color;
+        scrollPosition2 = GUILayout.BeginScrollView(scrollPosition, GUILayout.MaxWidth(300));
+        GUILayout.BeginVertical(GUILayout.MinWidth(100), GUILayout.MaxWidth(300));
+        for (int i = audioFiles.Length - 1; i >= 0; i--)
+        {
+            if (_objectIndex2 == i)
+            {
+                GUI.color = Color.green;
+                if (GUILayout.Button(audioFiles[i].name))
+                {
+                    open = null;
+                    _objectIndex2 = i;
+                }
+                GUI.color = oldColor;
+            }
+            else
+            {
+                if (GUILayout.Button(audioFiles[i].name))
+                {
+                    open = null;
+                    _objectIndex2 = i;
+                }
+            }
+        }
+        GUILayout.EndVertical();
+        GUILayout.EndScrollView();
+
+        GUILayout.BeginVertical();
+        if (_objectIndex2 <= audioFiles.Length)
+        {
+            ShowScriptableObjects(audioFiles[_objectIndex2]);
+        }
+        GUILayout.EndVertical();
+        GUILayout.EndHorizontal();
     }
     #endregion
 }
