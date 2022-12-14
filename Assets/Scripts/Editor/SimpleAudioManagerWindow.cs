@@ -10,8 +10,11 @@ public class SimpleAudioManagerWindow : EditorWindow
     private Vector2 scrollPosition;
     private List<bool> open;
     private bool allObjects = false;
-    AudioFile newAudioFile;
-    GUIStyle style;
+    private AudioFile newAudioFile;
+    private GUIStyle style;
+
+    private string scriptableObjectsLocation;
+    private string path;
 
     [MenuItem("Tools/SimpleAudioManager")]
     static void OpenSimpleAudioManager()
@@ -45,13 +48,14 @@ public class SimpleAudioManagerWindow : EditorWindow
                 }
                 break;
             case 1:
-
+                ShowLocationInput();
                 break;
             default:
                 break;
         }
     }
 
+    #region Tab Objects in Scene
     private GameObject[] GetAllGameObjectsInScene()
     {
         return (GameObject[])Resources.FindObjectsOfTypeAll(typeof(GameObject));
@@ -258,4 +262,22 @@ public class SimpleAudioManagerWindow : EditorWindow
             gameObject.AddComponent<SimpleAudioManager>();
         }
     }
+    #endregion
+
+    #region Tab Audio Files
+    private void ShowLocationInput()
+    {
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Select Path"))
+        {
+            path = EditorUtility.SaveFolderPanel("Select Path", "Assets/", "");
+        }
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void ShowScriptableObjects(string path)
+    {
+
+    }
+    #endregion
 }
