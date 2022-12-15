@@ -165,6 +165,22 @@ public class SimpleAudioManagerWindow : EditorWindow
                 {
                     ShowSOInfo(gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>().Files);
                 }
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Add AudioFile"))
+                {
+                    if (newAudioFile == null)
+                    {
+                        EditorUtility.DisplayDialog("Error", "Please select an AudioFile", "OK");
+                    }
+                    else
+                    {
+                        gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>().Files.Add(newAudioFile);
+                        newAudioFile = null;
+                        open.Add(false);
+                    }
+                }
+                newAudioFile = (AudioFile)EditorGUILayout.ObjectField(newAudioFile, typeof(AudioFile), false, GUILayout.Width(200), GUILayout.Height(50));
+                GUILayout.EndHorizontal();
             }
         }
         GUILayout.EndVertical();
@@ -229,14 +245,28 @@ public class SimpleAudioManagerWindow : EditorWindow
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("InfiniteLoop", EditorStyles.boldLabel);
+                EditorGUILayout.BeginHorizontal(GUILayout.MinWidth(200));
+                audioFiles[i].InfiniteLoop = EditorGUILayout.Toggle(audioFiles[i].InfiniteLoop);
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("PlayOnStart", EditorStyles.boldLabel);
+                EditorGUILayout.BeginHorizontal(GUILayout.MinWidth(200));
+                audioFiles[i].PlayOnStart = EditorGUILayout.Toggle(audioFiles[i].PlayOnStart);
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.BeginHorizontal();
                 style = new GUIStyle(GUI.skin.button);
                 style.normal.textColor = Color.red;
                 if (GUILayout.Button("Remove " + audioFiles[i].Name, style))
                 {
                     if (EditorUtility.DisplayDialog("Remove AudioFile", "Are you sure you want to remove AudioFile " + audioFiles[i].Name, "Delete", "Cancel"))
                     {
-                        audioFiles.Remove(audioFiles[i]);
                         open.Remove(audioFiles[i]);
+                        audioFiles.Remove(audioFiles[i]);
                     }
                 }
                 EditorGUILayout.EndHorizontal();
@@ -245,22 +275,6 @@ public class SimpleAudioManagerWindow : EditorWindow
             }
             EditorGUILayout.Space(20);
         }
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Add AudioFile"))
-        {
-            if (newAudioFile == null)
-            {
-                EditorUtility.DisplayDialog("Error", "Please select an AudioFile", "OK");
-            }
-            else
-            {
-                audioFiles.Add(newAudioFile);
-                newAudioFile = null;
-                open.Add(false);
-            }
-        }
-        newAudioFile = (AudioFile)EditorGUILayout.ObjectField(newAudioFile, typeof(AudioFile), false, GUILayout.Width(200), GUILayout.Height(50));
-        GUILayout.EndHorizontal();
     }
 
     private void ShowAttachScriptOption(GameObject gameObject)
