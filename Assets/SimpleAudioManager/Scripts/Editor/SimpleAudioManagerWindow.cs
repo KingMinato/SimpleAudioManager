@@ -278,7 +278,6 @@ public class SimpleAudioManagerWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         if (GUILayout.Button("Select Path"))
         {
-            //path = "Assets/SimpleAudioManager/Preset Audio Files/AudioFiles";
             relativePath = EditorUtility.SaveFolderPanel("Select Path", "Assets/", "");
             path = relativePath.Substring(relativePath.IndexOf("Assets/"));
         }
@@ -286,7 +285,7 @@ public class SimpleAudioManagerWindow : EditorWindow
         EditorGUILayout.EndHorizontal();
     }
 
-    private void ShowScriptableObjects(AudioFile audioFile)
+    private void ShowScriptableObjectInfo(AudioFile audioFile)
     {
         //AudioFile audioFile = AssetDatabase.LoadAssetAtPath<AudioFile>(file);
 
@@ -373,7 +372,7 @@ public class SimpleAudioManagerWindow : EditorWindow
         GUILayout.BeginVertical();
         if (_objectIndex2 <= audioFiles.Length)
         {
-            ShowScriptableObjects(audioFiles[_objectIndex2]);
+            ShowScriptableObjectInfo(audioFiles[_objectIndex2]);
         }
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
@@ -383,10 +382,10 @@ public class SimpleAudioManagerWindow : EditorWindow
     {
         if (GUILayout.Button("Create New Audio File"))
         {
-            string fileName = "Test";
+            string filePath = EditorUtility.SaveFilePanel("Select Directory", "Assets/", "NewAudioFile", "asset");
+            filePath = filePath.Substring(relativePath.IndexOf("Assets/"));
             AudioFile newAudioFile = ScriptableObject.CreateInstance<AudioFile>();
-            string filePath = path + "/" + fileName;
-            AssetDatabase.CreateAsset(newAudioFile, path);
+            AssetDatabase.CreateAsset(newAudioFile, filePath);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
