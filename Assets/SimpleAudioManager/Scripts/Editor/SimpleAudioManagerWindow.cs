@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 public class SimpleAudioManagerWindow : EditorWindow
@@ -53,6 +54,7 @@ public class SimpleAudioManagerWindow : EditorWindow
                 break;
             case 1:
                 ShowLocationInput();
+                CreateNewAudioFile();
                 if (path != null)
                 {
                     ShowScriptableObjectsInFolder(GetSOFromDir(path));
@@ -375,6 +377,19 @@ public class SimpleAudioManagerWindow : EditorWindow
         }
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
+    }
+
+    private void CreateNewAudioFile()
+    {
+        if (GUILayout.Button("Create New Audio File"))
+        {
+            string fileName = "Test";
+            AudioFile newAudioFile = ScriptableObject.CreateInstance<AudioFile>();
+            string filePath = path + "/" + fileName;
+            AssetDatabase.CreateAsset(newAudioFile, path);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
     }
     #endregion
 }
