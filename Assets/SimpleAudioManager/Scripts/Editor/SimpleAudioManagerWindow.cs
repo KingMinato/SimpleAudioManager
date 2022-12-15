@@ -19,7 +19,6 @@ public class SimpleAudioManagerWindow : EditorWindow
 
     private string relativePath;
     private string path;
-    private AudioFile[] scriptableObjectsInFolder;
 
     [MenuItem("Tools/SimpleAudioManager")]
     static void OpenSimpleAudioManager()
@@ -85,9 +84,7 @@ public class SimpleAudioManagerWindow : EditorWindow
                 GUI.color = Color.green;
                 if (GUILayout.Button(gameObjectsInScene[i].name))
                 {
-                    open = null;
-                    _objectIndex = i;
-                    Selection.activeGameObject = gameObjectsInScene[i];
+                    //Selection.activeGameObject = gameObjectsInScene[i];
                 }
                 GUI.color = oldColor;
             }
@@ -97,7 +94,7 @@ public class SimpleAudioManagerWindow : EditorWindow
                 {
                     open = null;
                     _objectIndex = i;
-                    Selection.activeGameObject = gameObjectsInScene[i];
+                    //Selection.activeGameObject = gameObjectsInScene[i];
                 }
             }
         }
@@ -105,11 +102,14 @@ public class SimpleAudioManagerWindow : EditorWindow
         GUILayout.EndScrollView();
 
         GUILayout.BeginVertical();
-        if (_objectIndex <= gameObjectsInScene.Length)
+        if (_objectIndex < gameObjectsInScene.Length)
         {
             if (gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>() != null)
             {
-                ShowSOInfo(gameObjectsInScene[_objectIndex].name, gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>().Files);
+                if (gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>().Files.Count > 0)
+                {
+                    ShowSOInfo(gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>().Files);
+                }
             }
             else
             {
@@ -157,29 +157,28 @@ public class SimpleAudioManagerWindow : EditorWindow
         GUILayout.EndScrollView();
 
         GUILayout.BeginVertical();
-        if (_objectIndex <= gameObjectsInScene.Length)
+        if (_objectIndex < gameObjectsInScene.Length)
         {
             if (gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>() != null)
             {
-                ShowSOInfo(gameObjectsInScene[_objectIndex].name, gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>().Files);
-            }
-            else
-            {
-                // Attach new Script if button pressed
+                if (gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>().Files.Count > 0)
+                {
+                    ShowSOInfo(gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>().Files);
+                }
             }
         }
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
     }
 
-    private void ShowSOInfo(string objectName, List<AudioFile> audioFiles)
+    private void ShowSOInfo(List<AudioFile> audioFiles)
     {
         var oldColor = GUI.color;
 
         if (open == null)
         {
             open = new List<bool>();
-            for (int i = 0; i < audioFiles.Count; i++)
+            for (int i = 0; i <= audioFiles.Count; i++)
             {
                 open.Add(false);
             }
@@ -232,9 +231,9 @@ public class SimpleAudioManagerWindow : EditorWindow
                 EditorGUILayout.BeginHorizontal();
                 style = new GUIStyle(GUI.skin.button);
                 style.normal.textColor = Color.red;
-                if (GUILayout.Button("Delete " + audioFiles[i].Name, style))
+                if (GUILayout.Button("Remove " + audioFiles[i].Name, style))
                 {
-                    if (EditorUtility.DisplayDialog("Delete AudioFile", "Are you sure you want to delete AudioFile " + audioFiles[i].Name, "Delete", "Cancel"))
+                    if (EditorUtility.DisplayDialog("Remove AudioFile", "Are you sure you want to remove AudioFile " + audioFiles[i].Name, "Delete", "Cancel"))
                     {
                         audioFiles.Remove(audioFiles[i]);
                         open.Remove(audioFiles[i]);
@@ -244,6 +243,7 @@ public class SimpleAudioManagerWindow : EditorWindow
 
                 EditorGUILayout.EndVertical();
             }
+            EditorGUILayout.Space(20);
         }
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Add AudioFile"))
@@ -287,8 +287,6 @@ public class SimpleAudioManagerWindow : EditorWindow
 
     private void ShowScriptableObjectInfo(AudioFile audioFile)
     {
-        //AudioFile audioFile = AssetDatabase.LoadAssetAtPath<AudioFile>(file);
-
         EditorGUILayout.BeginVertical();
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Name", EditorStyles.boldLabel);
@@ -326,6 +324,18 @@ public class SimpleAudioManagerWindow : EditorWindow
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.EndVertical();
+
+        EditorGUILayout.Space(5);
+
+        if (GUILayout.Button("Delete AudioFile", style))
+        {
+            if (EditorUtility.DisplayDialog("Delete AudioFile", "Are you sure you want to delete AudioFile", "Delete", "Cancel"))
+            {
+                Debug.Log(path + audioFile.name + ".asset");
+                AssetDatabase.DeleteAsset(path + "/" + audioFile.name + ".asset");
+                _objectIndex2 = 0;
+            }
+        }
     }
 
     private AudioFile[] GetSOFromDir(string path)
@@ -370,7 +380,7 @@ public class SimpleAudioManagerWindow : EditorWindow
         GUILayout.EndScrollView();
 
         GUILayout.BeginVertical();
-        if (_objectIndex2 <= audioFiles.Length)
+        if (_objectIndex2 < audioFiles.Length)
         {
             ShowScriptableObjectInfo(audioFiles[_objectIndex2]);
         }
