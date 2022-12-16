@@ -23,7 +23,7 @@ public class MusicBox : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            simpleAudioManager.Stop("Hello");
+            simpleAudioManager.Play("Bye");
         }
     }
 }

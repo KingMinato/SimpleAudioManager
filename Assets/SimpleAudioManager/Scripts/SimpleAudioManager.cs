@@ -54,7 +54,7 @@ public class SimpleAudioManager : MonoBehaviour
         Debug.LogError("Could not find file: " + fileName + ". Please check if File exists.");
     }
 
-    IEnumerator PlayWithLoop(string fileName)
+    private IEnumerator PlayWithLoop(string fileName)
     {
         for (int i = 0; i < Files.Count; i++)
         {
@@ -117,6 +117,14 @@ public class SimpleAudioManager : MonoBehaviour
         }
         if (!correctName)
             ErrorMessageWrongName(fileName);
+    }
+
+    public void Stop()
+    {
+        foreach (AudioFile file in Files)
+        {
+            file.AudioSource.Stop();
+        }
     }
 
     public void SetVolume(string fileName, float newVolume)

@@ -8,17 +8,20 @@ public class SimpleAudioManagerWindow : EditorWindow
 {
     private string[] tabNames = new string[2] { "Objects in Scene", "Audio Files" };
     private int activeTabIndex;
+
+    // Tab 1
     private int _objectIndex;
-    private int _objectIndex2;
     private Vector2 scrollPosition;
-    private Vector2 scrollPosition2;
     private List<bool> open;
     private bool allObjects = false;
-    private AudioFile newAudioFile;
     private GUIStyle style;
 
-    private string relativePath;
-    private string path;
+    // Tab 2
+    private int _objectIndex2;
+    private Vector2 scrollPosition2;
+    private AudioFile newAudioFile;
+    private string relativePath = "";
+    private string path = "";
 
     [MenuItem("Tools/SimpleAudioManager")]
     static void OpenSimpleAudioManager()
@@ -54,7 +57,7 @@ public class SimpleAudioManagerWindow : EditorWindow
             case 1:
                 ShowLocationInput();
                 CreateNewAudioFile();
-                if (path != null)
+                if (path != "")
                 {
                     ShowScriptableObjectsInFolder(GetSOFromDir(path));
                 }
@@ -82,10 +85,7 @@ public class SimpleAudioManagerWindow : EditorWindow
             if (_objectIndex == i)
             {
                 GUI.color = Color.green;
-                if (GUILayout.Button(gameObjectsInScene[i].name))
-                {
-                    //Selection.activeGameObject = gameObjectsInScene[i];
-                }
+                GUILayout.Button(gameObjectsInScene[i].name);
                 GUI.color = oldColor;
             }
             else
@@ -94,7 +94,6 @@ public class SimpleAudioManagerWindow : EditorWindow
                 {
                     open = null;
                     _objectIndex = i;
-                    //Selection.activeGameObject = gameObjectsInScene[i];
                 }
             }
         }
@@ -110,6 +109,22 @@ public class SimpleAudioManagerWindow : EditorWindow
                 {
                     ShowSOInfo(gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>().Files);
                 }
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Add AudioFile"))
+                {
+                    if (newAudioFile == null)
+                    {
+                        EditorUtility.DisplayDialog("Error", "Please select an AudioFile", "OK");
+                    }
+                    else
+                    {
+                        gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>().Files.Add(newAudioFile);
+                        newAudioFile = null;
+                        open.Add(false);
+                    }
+                }
+                newAudioFile = (AudioFile)EditorGUILayout.ObjectField(newAudioFile, typeof(AudioFile), false, GUILayout.Width(200), GUILayout.Height(50));
+                GUILayout.EndHorizontal();
             }
             else
             {
@@ -293,7 +308,10 @@ public class SimpleAudioManagerWindow : EditorWindow
         if (GUILayout.Button("Select Path"))
         {
             relativePath = EditorUtility.SaveFolderPanel("Select Path", "Assets/", "");
-            path = relativePath.Substring(relativePath.IndexOf("Assets/"));
+            if (relativePath != "")
+            {
+                path = relativePath.Substring(relativePath.IndexOf("Assets/"));
+            }
         }
         GUILayout.Label(path);
         EditorGUILayout.EndHorizontal();
@@ -339,13 +357,27 @@ public class SimpleAudioManagerWindow : EditorWindow
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.EndVertical();
 
-        EditorGUILayout.Space(5);
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("InfiniteLoop", EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal(GUILayout.MinWidth(200));
+        audioFile.InfiniteLoop = EditorGUILayout.Toggle(audioFile.InfiniteLoop);
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndHorizontal();
 
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("PlayOnStart", EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal(GUILayout.MinWidth(200));
+        audioFile.PlayOnStart = EditorGUILayout.Toggle(audioFile.PlayOnStart);
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.Space(5);
+        style = new GUIStyle(GUI.skin.button);
+        style.normal.textColor = Color.red;
         if (GUILayout.Button("Delete AudioFile", style))
         {
             if (EditorUtility.DisplayDialog("Delete AudioFile", "Are you sure you want to delete AudioFile", "Delete", "Cancel"))
             {
-                Debug.Log(path + audioFile.name + ".asset");
                 AssetDatabase.DeleteAsset(path + "/" + audioFile.name + ".asset");
                 _objectIndex2 = 0;
             }
@@ -406,12 +438,23 @@ public class SimpleAudioManagerWindow : EditorWindow
     {
         if (GUILayout.Button("Create New Audio File"))
         {
-            string filePath = EditorUtility.SaveFilePanel("Select Directory", "Assets/", "NewAudioFile", "asset");
-            filePath = filePath.Substring(relativePath.IndexOf("Assets/"));
-            AudioFile newAudioFile = ScriptableObject.CreateInstance<AudioFile>();
-            AssetDatabase.CreateAsset(newAudioFile, filePath);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+            string filePath;
+            if (path != null)
+            {
+                filePath = EditorUtility.SaveFilePanel("Select Directory", path, "NewAudioFile", "asset");
+            }
+            else
+            {
+                filePath = EditorUtility.SaveFilePanel("Select Directory", "Assets/", "NewAudioFile", "asset");
+            }
+            if (filePath != "")
+            {
+                filePath = filePath.Substring(filePath.IndexOf("Assets/"));
+                AudioFile newAudioFile = ScriptableObject.CreateInstance<AudioFile>();
+                AssetDatabase.CreateAsset(newAudioFile, filePath);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
         }
     }
     #endregion

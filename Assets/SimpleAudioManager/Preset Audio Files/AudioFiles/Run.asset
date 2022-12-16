@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216630ca04b3b444684e4d449e8534ea, type: 3}
   m_Name: Run
   m_EditorClassIdentifier: 
-  Name: 
+  Name: Run
   AudioSource: {fileID: 0}
-  AudioClip: {fileID: 0}
-  AudioVolume: 50
-  Loop: 0
+  AudioClip: {fileID: 8300000, guid: 72a283be14a429247aeb8a89ac9da777, type: 3}
+  AudioVolume: 10
+  Loop: 1
   LoopAmount: 1
-  InfiniteLoop: 0
+  InfiniteLoop: 1
   PlayOnStart: 0

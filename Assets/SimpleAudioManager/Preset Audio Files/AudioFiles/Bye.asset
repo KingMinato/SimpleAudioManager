@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 216630ca04b3b444684e4d449e8534ea, type: 3}
-  m_Name: TEST
+  m_Name: Bye
   m_EditorClassIdentifier: 
-  Name: 
+  Name: Bye
   AudioSource: {fileID: 0}
-  AudioClip: {fileID: 0}
-  AudioVolume: 50
+  AudioClip: {fileID: 8300000, guid: c88a4c42f7d328a4f97f2045f2ece3b9, type: 3}
+  AudioVolume: 20
   Loop: 0
   LoopAmount: 1
   InfiniteLoop: 0

@@ -16,7 +16,7 @@ MonoBehaviour:
   AudioSource: {fileID: 0}
   AudioClip: {fileID: 8300000, guid: 351b0498c6290b342baedd80629421f6, type: 3}
   AudioVolume: 20
-  Loop: 1
+  Loop: 0
   LoopAmount: 0
-  InfiniteLoop: 1
+  InfiniteLoop: 0
   PlayOnStart: 0
