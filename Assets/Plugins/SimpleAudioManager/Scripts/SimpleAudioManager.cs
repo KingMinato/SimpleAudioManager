@@ -69,6 +69,10 @@ public class SimpleAudioManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName: Als Parameter wird der Name der Audio File mitgegeben."></param>
     public void Play(string fileName)
     {
         bool correctName = false;
@@ -100,6 +104,10 @@ public class SimpleAudioManager : MonoBehaviour
             ErrorMessageWrongName(fileName);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName: Als Parameter wird der Name der Audio File mitgegeben."></param>
     public void Stop(string fileName)
     {
         bool correctName = false;
@@ -127,6 +135,11 @@ public class SimpleAudioManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName: Als Parameter wird der Name der Audio File mitgegeben."></param>
+    /// <param name="newVolume: Setzt die Lautstaerke in Prozent."></param>
     public void SetVolume(string fileName, float newVolume)
     {
         bool correctName = false;
@@ -143,6 +156,11 @@ public class SimpleAudioManager : MonoBehaviour
             ErrorMessageWrongName(fileName);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName: Als Parameter wird der Name der Audio File mitgegeben."></param>
+    /// <param name="loopState: Setzt den LoopState auf true oder false."></param>
     public void SetLoop(string fileName, bool loopState)
     {
         bool correctName = false;
@@ -159,6 +177,11 @@ public class SimpleAudioManager : MonoBehaviour
             ErrorMessageWrongName(fileName);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName: Als Parameter wird der Name der Audio File mitgegeben."></param>
+    /// <param name="loopAmount: Setzt die Anzahl der Loops. Wird nur beachtet, wenn Loop true und InfiniteLoop false ist."></param>
     public void SetLoopAmount(string fileName, int loopAmount)
     {
         bool correctName = false;
@@ -175,6 +198,11 @@ public class SimpleAudioManager : MonoBehaviour
             ErrorMessageWrongName(fileName);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName: Als Parameter wird der Name der Audio File mitgegeben."></param>
+    /// <param name="infiniteLoopState: Setzt den InfiniteLoopState auf true oder false. Ist InfiniteLoop true, wird LoopAmount ignoriert und die Audio File unendlich lange wiederholt."></param>
     public void SetInfiniteLoop(string fileName, bool infiniteLoopState)
     {
         bool correctName = false;
@@ -191,6 +219,11 @@ public class SimpleAudioManager : MonoBehaviour
             ErrorMessageWrongName(fileName);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName: Als Parameter wird der Name der Audio File mitgegeben."></param>
+    /// <returns>Gibt den InfiniteLoopState als bool zurueck.</returns>
     public bool GetInfiniteLoopState(string fileName)
     {
         for (int i = 0; i < Files.Count; i++)
@@ -204,6 +237,11 @@ public class SimpleAudioManager : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName: Als Parameter wird der Name der Audio File mitgegeben."></param>
+    /// <returns>Gibt die Lautstaerke als float in Prozent zurueck.</returns>
     public float GetVolume(string fileName)
     {
         for (int i = 0; i < Files.Count; i++)
@@ -217,6 +255,11 @@ public class SimpleAudioManager : MonoBehaviour
         return 0;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName: Als Parameter wird der Name der Audio File mitgegeben."></param>
+    /// <returns>Gibt den LoopState als bool zurueck.</returns>
     public bool GetLoopState(string fileName)
     {
         for (int i = 0; i < Files.Count; i++)
@@ -230,6 +273,11 @@ public class SimpleAudioManager : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName: Als Parameter wird der Name der Audio File mitgegeben."></param>
+    /// <returns>Gibt Anzahl der Loops als int zurueck.</returns>
     public int GetLoopAmount(string fileName)
     {
         for (int i = 0; i < Files.Count; i++)
@@ -243,6 +291,11 @@ public class SimpleAudioManager : MonoBehaviour
         return 0;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fileName: Als Parameter wird der Name der Audio File mitgegeben."></param>
+    /// <returns>Gibt als bool zurueck, ob die Audio File abgespielt wird oder nicht.</returns>
     public bool GetPlayingState(string fileName)
     {
         for (int i = 0; i < Files.Count; i++)
