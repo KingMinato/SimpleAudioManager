@@ -120,7 +120,11 @@ public class SimpleAudioManagerWindow : EditorWindow
                     {
                         gameObjectsInScene[_objectIndex].GetComponent<SimpleAudioManager>().Files.Add(newAudioFile);
                         newAudioFile = null;
-                        open.Add(false);
+                        if (open == null)
+                        {
+                            open = new List<bool>();
+                            open.Add(false);
+                        }
                     }
                 }
                 newAudioFile = (AudioFile)EditorGUILayout.ObjectField(newAudioFile, typeof(AudioFile), false, GUILayout.Width(200), GUILayout.Height(50));
@@ -209,9 +213,12 @@ public class SimpleAudioManagerWindow : EditorWindow
         if (open == null)
         {
             open = new List<bool>();
-            for (int i = 0; i <= audioFiles.Count; i++)
+            if (audioFiles.Count > 0)
             {
-                open.Add(false);
+                for (int i = 0; i <= audioFiles.Count; i++)
+                {
+                    open.Add(false);
+                }
             }
         }
 
